@@ -13,7 +13,10 @@ STALE_TRACK_TIMEOUT_SEC = 300.0
 
 
 def _signed_side(point: np.ndarray, p1: np.ndarray, line_vec: np.ndarray) -> float:
-    return float(np.cross(line_vec, point - p1))
+    # Manual 2D cross product: (line_vec.x * diff.y) - (line_vec.y * diff.x)
+    # np.cross on 2D vectors was deprecated/broken in newer NumPy versions.
+    diff = point - p1
+    return float(line_vec[0] * diff[1] - line_vec[1] * diff[0])
 
 
 class LineCrossingTracker:

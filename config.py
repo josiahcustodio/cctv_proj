@@ -17,7 +17,9 @@ def _rtsp_url(user: str, password: str, host: str, path: str) -> str:
     return f"rtsp://{quote(user, safe='')}:{quote(password, safe='')}@{host}{path}"
 
 # System Hardware & Model Settings
-CUDA_DEVICE: str = "cuda:0"
+# Auto-detect: use CUDA GPU if available, fall back to CPU (for laptops without NVIDIA GPU)
+import torch as _torch
+CUDA_DEVICE: str = "cuda:0" if _torch.cuda.is_available() else "cpu"
 YOLO_MODEL_PATH: str = os.path.join(os.getcwd(), "yolov8n.pt")
 TRT_ENGINE_PATH: str = os.path.join(os.getcwd(), "yolov8n.engine")
 BATCH_SIZE: int = 4  # max simultaneous cameras the TensorRT engine is profiled for (see engine_builder.py)
